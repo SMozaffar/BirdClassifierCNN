@@ -7,6 +7,7 @@ import csv
 import os
 import torch
 
+
 def get_labels(csv_path):
     label_names = set()
     with open(csv_path, 'r') as file:
@@ -17,17 +18,18 @@ def get_labels(csv_path):
     return sorted(label_names)
 
 
+# Get label names
+global LABEL_NAMES 
+global num_classes
+LABEL_NAMES = get_labels('/data/birds.csv')
+num_classes = len(LABEL_NAMES)
+
+
 class BirdsDataset(Dataset):
     def __init__(self, dataset_path, split='train'):
         self.data = []
         self.labels = []
         label_path = os.path.join(dataset_path, 'birds.csv')
-
-        # Get label names
-        global LABEL_NAMES 
-        global num_classes
-        LABEL_NAMES = get_labels(label_path)
-        num_classes = len(LABEL_NAMES)
         
         # Read csv file
         with open(label_path, 'r') as file:
