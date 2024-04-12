@@ -1,5 +1,5 @@
-from .models import CNNClassifier, save_model, load_model
-from .utils import accuracy, load_data
+from models import CNNClassifier, save_model, load_model
+from utils import accuracy, load_data
 import torch
 import torch.utils.tensorboard as tb
 import os

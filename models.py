@@ -1,13 +1,10 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from .utils import num_classes
+from utils import num_classes
 
 class CNNClassifier(torch.nn.Module):
     def __init__(self, num_classes = num_classes):
-        """
-        Your code here
-        """
         super().__init__()
         # Convolutions
         self.conv1 = nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1)
@@ -21,16 +18,15 @@ class CNNClassifier(torch.nn.Module):
         self.bn3 = nn.BatchNorm2d(128)
 
         # Fully connected layers
-        # After pooling, image size reduced to 64/2/2 = 16
-        self.fc1 = nn.Linear(128 * 16 * 16, 256)
+        # After pooling x 3, image size reduced to 64/2/2/2 = 8
+        self.fc1 = nn.Linear(128 * 8 * 8, 256)
         self.fc2 = nn.Linear(256, num_classes)
 
 
     def forward(self, x):
         """
-        Your code here
         @x: torch.Tensor((B,3,64,64))
-        @return: torch.Tensor((B,6))
+        @return: torch.Tensor((B,num_classes))
         """
         # Apply convolutions, non-linearity , and pooling layers
         x = self.pool(F.relu(self.bn1(self.conv1(x))))

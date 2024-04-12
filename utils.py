@@ -21,7 +21,7 @@ def get_labels(csv_path):
 # Get label names
 global LABEL_NAMES 
 global num_classes
-LABEL_NAMES = get_labels('/data/birds.csv')
+LABEL_NAMES = get_labels('/content/BirdClassifierCNN/data/birds.csv')
 num_classes = len(LABEL_NAMES)
 
 
@@ -35,10 +35,13 @@ class BirdsDataset(Dataset):
         with open(label_path, 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                img_path = os.path.join(dataset_path, split, row['filepaths'].split('/')[-2], row['filepaths'].split('/')[-1])
-                label = LABEL_NAMES.index(row['labels'])
-                self.data.append(img_path)
-                self.labels.append(label)
+                if row['filepaths'].split('/')[0] != split:
+                    continue
+                else:
+                    img_path = os.path.join(dataset_path, split, row['filepaths'].split('/')[-2], row['filepaths'].split('/')[-1])
+                    label = LABEL_NAMES.index(row['labels'])
+                    self.data.append(img_path)
+                    self.labels.append(label)
         
         # Transforms PIL image to tensor
         self.transform = transforms.Compose([
@@ -47,9 +50,6 @@ class BirdsDataset(Dataset):
         ])
 
     def __len__(self):
-        """
-        Your code here
-        """
         return len(self.data)
 
     def __getitem__(self, idx):
